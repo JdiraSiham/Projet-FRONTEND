@@ -3,19 +3,19 @@ export default function Home({ onNavigate }) {
     {
       id: 1,
       name: "Maillot Maroc",
-      price: "799 DH",
+      price: "800 DH",
       image: "https://sporhousepro.ma/wp-content/uploads/2024/11/frmf-away-jersey-replica.webp",
     },
     {
       id: 2,
       name: "Maillot FC Barcelone",
-      price: "899 DH",
+      price: "1100 DH",
       image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_cgHJm10LpBHfBZA8h3R14QZBClbzpJPyPw&s",
     },
     {
       id: 3,
       name: "Ballons PUMA Pro",
-      price: "299 DH",
+      price: "800 DH",
       image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRyz-Or9jFDopKQUyCqnLQflDNCJ1ENLeByKg&s",
     },
   ];
@@ -24,13 +24,13 @@ export default function Home({ onNavigate }) {
     {
       id: 1,
       name: "Complexe Sportif Atlas",
-      price: "500 DH",
+      price: "1000 DH",
       image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRgE-riAGqO1kA2Ko6yO-G5sFc-xYfkLtemtg&s",
     },
     {
       id: 2,
       name: "Stade Municipal",
-      price: "500 DH",
+      price: "800 DH",
       image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ81ZMCo0VjSf0r3OlfkAKStqniTe8nCEaNag&s",
     },
   ];

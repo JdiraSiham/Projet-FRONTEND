@@ -26,19 +26,19 @@ export default function Boutique({ onNavigate }) {
     {
       id: 1,
       name: "Real Madrid",
-      price: "89.99 DH",
+      price: "1100 DH",
       image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDJMjr8qCmlepxgCAZeaxiHj9Po9Daq3IPfA&s",
     },
     {
       id: 2,
       name: "FC Barcelone",
-      price: "89.99 DH",
+      price: "1100 DH",
       image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_cgHJm10LpBHfBZA8h3R14QZBClbzpJPyPw&s",
     },
     {
       id: 3,
       name: "Man United",
-      price: "89.99 DH",
+      price: "900 DH",
       image: "https://assets.adidas.com/images/w_1880,f_auto,q_auto/e1a2021d272842b0b7e9cdc61055e9ed_9366/JI7423_01_laydown.jpg",
     },
   ];
@@ -47,19 +47,19 @@ export default function Boutique({ onNavigate }) {
     {
       id: 4,
       name: "Maillot Maroc",
-      price: "79.99 DH",
+      price: "800 DH",
       image: "https://sporhousepro.ma/wp-content/uploads/2024/11/frmf-away-jersey-replica.webp",
     },
     {
       id: 5,
       name: "Maillot Argentina",
-      price: "79.99 DH",
+      price: "900 DH",
       image: "https://assets.adidas.com/images/w_1880,f_auto,q_auto/a98e2173ceb5427980bdd77bea1b4f27_9366/KA8125_01_laydown.jpg",
     },
     {
       id: 6,
       name: "Maillot Portugal",
-      price: "79.99 DH",
+      price: "900 DH",
       image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjMYpC5oNAg9RC2miQY-tfX-7AnwNQgYZ3Zg&s",
     },
   ];
@@ -68,19 +68,19 @@ export default function Boutique({ onNavigate }) {
     {
       id: 7,
       name: "Ballon PUMA",
-      price: "34 DH",
+      price: "800 DH",
       image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRyz-Or9jFDopKQUyCqnLQflDNCJ1ENLeByKg&s",
     },
     {
       id: 8,
       name: "Crampons Adidas",
-      price: "119 DH",
+      price: "600 DH",
       image: "https://assets.adidas.com/images/w_450,f_auto,q_auto/aa61d9846e5b440fae882f4140608f73_9366/JS0378_HM1.jpg",
     },
     {
       id: 9,
       name: "Gants de gardien",
-      price: "39 DH",
+      price: "400 DH",
       image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVRYTw1PJ-oKb1jwDxdbdqvFR4YEd89_UtYQ&s",
     },
   ];
