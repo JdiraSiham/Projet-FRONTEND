@@ -1,25 +1,4 @@
-export default function MesMatchs({ onNavigate, onBack }) {
-  const matchs = [
-    {
-      id: 1,
-      title: "Match amical 5v5",
-      organizer: "Ahmed M.",
-      location: "Hay Ryad, Rabat",
-      date: "13 Mars 2020",
-      time: "16:30",
-      status: "À venir",
-    },
-    {
-      id: 2,
-      title: "Match compétitif 7v7",
-      organizer: "Karim B.",
-      location: "Complexe Sportif Atlas",
-      date: "5 Mars 2020",
-      time: "18:00",
-      status: "Terminé",
-    },
-  ];
-
+export default function MesMatchs({ onNavigate, onBack, myMatches, onCancelMatch }) {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="bg-white sticky top-0 md:top-16 z-40 shadow-sm">
@@ -41,7 +20,7 @@ export default function MesMatchs({ onNavigate, onBack }) {
 
       <div className="max-w-7xl mx-auto px-4 py-6 pb-24">
         <div className="space-y-4">
-          {matchs.map((match) => (
+          {(myMatches || []).map((match) => (
             <div key={match.id} className="bg-white rounded-xl shadow-sm p-4">
               <div className="flex justify-between items-start mb-3">
                 <div>
@@ -86,7 +65,10 @@ export default function MesMatchs({ onNavigate, onBack }) {
               </div>
 
               {match.status === "À venir" && (
-                <button className="w-full mt-4 bg-red-50 text-red-600 py-2 rounded-lg hover:bg-red-100 transition-colors font-medium">
+                <button 
+                  onClick={() => onCancelMatch?.(match.id)}
+                  className="w-full mt-4 bg-red-50 text-red-600 py-2 rounded-lg hover:bg-red-100 transition-colors font-medium"
+                >
                   Annuler ma participation
                 </button>
               )}

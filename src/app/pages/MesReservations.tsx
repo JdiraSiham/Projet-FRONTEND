@@ -1,25 +1,4 @@
-export default function MesReservations({ onNavigate, onBack }) {
-  const reservations = [
-    {
-      id: 1,
-      name: "Complexe Sportif Atlas",
-      location: "Hay Ryad, Rabat",
-      date: "15 Mars 2020",
-      time: "18:00 - 19:00",
-      price: "500 DH",
-      status: "Confirmée",
-    },
-    {
-      id: 2,
-      name: "Stade Municipal",
-      location: "Centre-ville, Casablanca",
-      date: "8 Mars 2020",
-      time: "16:00 - 17:00",
-      price: "500 DH",
-      status: "Terminée",
-    },
-  ];
-
+export default function MesReservations({ onNavigate, onBack, reservations, onCancelReservation }) {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="bg-white sticky top-0 md:top-16 z-40 shadow-sm">
@@ -41,7 +20,7 @@ export default function MesReservations({ onNavigate, onBack }) {
 
       <div className="max-w-7xl mx-auto px-4 py-6 pb-24">
         <div className="space-y-4">
-          {reservations.map((reservation) => (
+          {(reservations || []).map((reservation) => (
             <div key={reservation.id} className="bg-white rounded-xl shadow-sm p-4">
               <div className="flex justify-between items-start mb-3">
                 <div>
@@ -83,7 +62,10 @@ export default function MesReservations({ onNavigate, onBack }) {
                   {reservation.price}
                 </span>
                 {reservation.status === "Confirmée" && (
-                  <button className="px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors font-medium">
+                  <button 
+                    onClick={() => onCancelReservation?.(reservation.id)}
+                    className="px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors font-medium"
+                  >
                     Annuler
                   </button>
                 )}

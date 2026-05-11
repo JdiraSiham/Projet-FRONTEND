@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function Reserver({ onNavigate }) {
+export default function Reserver({ onNavigate, onReserveTerrain, onJoinMatch }) {
   const [activeTab, setActiveTab] = useState("matchs");
   const [selectedLevel, setSelectedLevel] = useState(null);
   const [selectedCity, setSelectedCity] = useState(null);
@@ -10,6 +10,68 @@ export default function Reserver({ onNavigate }) {
 
   const niveaux = ["Débutant", "Amateur", "Compétitif", "Semi-pro"];
   const villes = ["Casablanca", "Rabat", "Marrakech", "Fès", "Tanger", "Agadir"];
+
+  // Generate random availability for terrains
+  const generateAvailability = () => {
+    const dates = [];
+    const today = new Date();
+    for (let i = 0; i < 7; i++) {
+      const date = new Date(today);
+      date.setDate(today.getDate() + i);
+      dates.push(date.toISOString().split('T')[0]);
+    }
+    const times = ['08:00', '10:00', '14:00', '16:00', '18:00', '20:00'];
+    return { dates, times };
+  };
+
+  const { dates: availableDates, times: availableTimes } = generateAvailability();
+
+  const terrains = [
+    {
+      id: 1,
+      name: "Complexe Sportif Atlas",
+      location: "Hay Ryad, Rabat",
+      city: "Rabat",
+      price: "1000 DH",
+      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRgE-riAGqO1kA2Ko6yO-G5sFc-xYfkLtemtg&s",
+      type: "Terrain synthétique",
+      availableDates: availableDates.slice(0, 3), // Random subset
+      availableTimes: availableTimes.slice(0, 4),
+    },
+    {
+      id: 2,
+      name: "Stade Municipal",
+      location: "Centre-ville, Casablanca",
+      city: "Casablanca",
+      price: "800 DH",
+      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ81ZMCo0VjSf0r3OlfkAKStqniTe8nCEaNag&s",
+      type: "Gazon naturel",
+      availableDates: availableDates.slice(1, 4),
+      availableTimes: availableTimes.slice(1, 5),
+    },
+    {
+      id: 3,
+      name: "Terrain Al Amal",
+      location: "Agdal, Rabat",
+      city: "Rabat",
+      price: "1100 DH",
+      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRN73D2o5nzCMWSOUdhpDpe7sPtcTXilaBS1w&s",
+      type: "Terrain synthétique",
+      availableDates: availableDates.slice(2, 5),
+      availableTimes: availableTimes.slice(0, 3),
+    },
+    {
+      id: 4,
+      name: "Stade Olympique",
+      location: "Maarif, Casablanca",
+      city: "Casablanca",
+      price: "900 DH",
+      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSiMt_VER_OHcXjreVkFaMfU5QCe_VEOP5CjQ&s",
+      type: "Gazon naturel",
+      availableDates: availableDates.slice(0, 4),
+      availableTimes: availableTimes.slice(2, 6),
+    },
+  ];
 
   const matches = [
     {
@@ -58,48 +120,16 @@ export default function Reserver({ onNavigate }) {
     },
   ];
 
-  const terrains = [
-    {
-      id: 1,
-      name: "Complexe Sportif Atlas",
-      location: "Hay Ryad, Rabat",
-      city: "Rabat",
-      price: "1000 DH",
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRgE-riAGqO1kA2Ko6yO-G5sFc-xYfkLtemtg&s",
-      type: "Terrain synthétique",
-    },
-    {
-      id: 2,
-      name: "Stade Municipal",
-      location: "Centre-ville, Casablanca",
-      city: "Casablanca",
-      price: "800 DH",
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ81ZMCo0VjSf0r3OlfkAKStqniTe8nCEaNag&s",
-      type: "Gazon naturel",
-    },
-    {
-      id: 3,
-      name: "Terrain Al Amal",
-      location: "Agdal, Rabat",
-      city: "Rabat",
-      price: "1100 DH",
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRN73D2o5nzCMWSOUdhpDpe7sPtcTXilaBS1w&s",
-      type: "Terrain synthétique",
-    },
-    {
-      id: 4,
-      name: "Stade Olympique",
-      location: "Maarif, Casablanca",
-      city: "Casablanca",
-      price: "900 DH",
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSiMt_VER_OHcXjreVkFaMfU5QCe_VEOP5CjQ&s",
-      type: "Gazon naturel",
-    },
-  ];
-
   const filteredMatches = matches.filter((match) => {
     if (selectedLevel && match.level !== selectedLevel) return false;
     if (selectedCity && match.city !== selectedCity) return false;
+    return true;
+  });
+
+  const filteredTerrains = terrains.filter((terrain) => {
+    if (searchVille && terrain.city !== searchVille) return false;
+    if (searchDate && !terrain.availableDates.includes(searchDate)) return false;
+    if (searchTime && !terrain.availableTimes.includes(searchTime)) return false;
     return true;
   });
 
@@ -280,7 +310,10 @@ export default function Reserver({ onNavigate }) {
                     </div>
                   </div>
 
-                  <button className="w-full bg-[#235A3D] text-white py-2 rounded-lg hover:bg-[#1d4a32] transition-colors font-medium">
+                  <button 
+                    onClick={() => onJoinMatch?.(match)}
+                    className="w-full bg-[#235A3D] text-white py-2 rounded-lg hover:bg-[#1d4a32] transition-colors font-medium"
+                  >
                     Rejoindre
                   </button>
                 </div>
@@ -339,37 +372,46 @@ export default function Reserver({ onNavigate }) {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {terrains.map((terrain) => (
-                <div
-                  key={terrain.id}
-                  className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow"
-                >
-                  <img
-                    src={terrain.image}
-                    alt={terrain.name}
-                    className="w-full h-48 object-cover"
-                  />
-                  <div className="p-4">
-                    <h3 className="font-bold text-lg mb-1">{terrain.name}</h3>
-                    <p className="text-sm text-gray-600 mb-2">{terrain.type}</p>
-                    <div className="flex items-center gap-2 text-sm text-gray-600 mb-3">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                        <circle cx="12" cy="10" r="3"></circle>
-                      </svg>
-                      {terrain.location}
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <p className="text-xl font-bold text-[#235A3D]">
-                        {terrain.price}
-                      </p>
-                      <button className="bg-[#235A3D] text-white px-4 py-2 rounded-lg hover:bg-[#1d4a32] transition-colors">
-                        Réserver
-                      </button>
+              {filteredTerrains.length === 0 ? (
+                <div className="bg-white rounded-xl shadow-sm p-8 text-center text-gray-600">
+                  Aucun terrain disponible pour ces critères.
+                </div>
+              ) : (
+                filteredTerrains.map((terrain) => (
+                  <div
+                    key={terrain.id}
+                    className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow"
+                  >
+                    <img
+                      src={terrain.image}
+                      alt={terrain.name}
+                      className="w-full h-48 object-cover"
+                    />
+                    <div className="p-4">
+                      <h3 className="font-bold text-lg mb-1">{terrain.name}</h3>
+                      <p className="text-sm text-gray-600 mb-2">{terrain.type}</p>
+                      <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                          <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                        {terrain.location}
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <p className="text-xl font-bold text-[#235A3D]">
+                          {terrain.price}
+                        </p>
+                        <button
+                          onClick={() => onReserveTerrain(terrain, searchDate, searchTime)}
+                          className="bg-[#235A3D] text-white px-4 py-2 rounded-lg hover:bg-[#1d4a32] transition-colors"
+                        >
+                          Réserver
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))
+              )}
             </div>
           </div>
         )}

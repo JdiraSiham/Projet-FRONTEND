@@ -1,86 +1,22 @@
 import { useState } from "react";
 
-export default function MesCommandes({ onNavigate, onBack }) {
+export default function MesCommandes({
+  onNavigate,
+  onBack,
+  cartItems,
+  orders,
+  onUpdateQuantity,
+  onRemoveItem,
+  onPlaceOrder,
+}) {
   const [activeTab, setActiveTab] = useState("panier");
 
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      name: "Maillot FC Barcelone 2023/24",
-      price: 899,
-      quantity: 1,
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4pjljKtBV1iUAWIj7fjbIufOxE7UH65UUlw&s",
-      category: "Clubs",
-    },
-    {
-      id: 2,
-      name: "Ballon de football Nike",
-      price: 299,
-      quantity: 2,
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTJvPnTCHkQd2GMeTYolX7Vt_V8tN1PfdwL3A&s",
-      category: "Équipements",
-    },
-  ]);
-
-  const updateQuantity = (id, change) => {
-    setCartItems((items) =>
-      items.map((item) =>
-        item.id === id
-          ? { ...item, quantity: Math.max(1, item.quantity + change) }
-          : item
-      )
-    );
-  };
-
-  const removeItem = (id) => {
-    setCartItems((items) => items.filter((item) => item.id !== id));
-  };
-
-  const subtotal = cartItems.reduce(
+  const subtotal = (cartItems || []).reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
   );
-  const shipping = 50;
+  const shipping = subtotal > 0 ? 50 : 0;
   const total = subtotal + shipping;
-
-  const orders = [
-    {
-      id: 1,
-      orderNumber: "#CMD-2024-001",
-      date: "5 Mars 2020",
-      items: [
-        {
-          name: "Maillot FC Barcelone 2023/24",
-          quantity: 1,
-          price: 899,
-          image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4pjljKtBV1iUAWIj7fjbIufOxE7UH65UUlw&s",
-        },
-        {
-          name: "Ballon de football Nike",
-          quantity: 2,
-          price: 299,
-          image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTJvPnTCHkQd2GMeTYolX7Vt_V8tN1PfdwL3A&s",
-        },
-      ],
-      total: 1497,
-      status: "Livrée",
-    },
-    {
-      id: 2,
-      orderNumber: "#CMD-2024-002",
-      date: "12 Mars 2020",
-      items: [
-        {
-          name: "Chaussures Nike Mercurial",
-          quantity: 1,
-          price: 1299,
-          image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPHAWQkOf5XBtxEph2qq6P8uvIywjLF_IPGQ&s",
-        },
-      ],
-      total: 1299,
-      status: "En cours",
-    },
-  ];
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -165,8 +101,8 @@ export default function MesCommandes({ onNavigate, onBack }) {
               </div>
             ) : (
               <>
-                {cartItems.map((item) => (
-                  <div key={item.id} className="bg-white rounded-lg p-4 shadow-sm">
+                {(cartItems || []).map((item) => (
+                  <div key={`${item.id}-${item.category}`} className="bg-white rounded-lg p-4 shadow-sm">
                     <div className="flex gap-4">
                       <img
                         src={item.image}
@@ -180,7 +116,7 @@ export default function MesCommandes({ onNavigate, onBack }) {
                             <p className="text-sm text-gray-500">{item.category}</p>
                           </div>
                           <button
-                            onClick={() => removeItem(item.id)}
+                            onClick={() => onRemoveItem?.(item.id, item.category)}
                             className="text-red-500 hover:text-red-700 p-1"
                           >
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -192,7 +128,7 @@ export default function MesCommandes({ onNavigate, onBack }) {
                         <div className="flex justify-between items-center mt-3">
                           <div className="flex items-center gap-3 border rounded-lg">
                             <button
-                              onClick={() => updateQuantity(item.id, -1)}
+                              onClick={() => onUpdateQuantity?.(item.id, item.category, -1)}
                               className="p-2 hover:bg-gray-100 rounded-l-lg"
                             >
                               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -201,7 +137,7 @@ export default function MesCommandes({ onNavigate, onBack }) {
                             </button>
                             <span className="font-medium w-8 text-center">{item.quantity}</span>
                             <button
-                              onClick={() => updateQuantity(item.id, 1)}
+                              onClick={() => onUpdateQuantity?.(item.id, item.category, 1)}
                               className="p-2 hover:bg-gray-100 rounded-r-lg"
                             >
                               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -236,7 +172,10 @@ export default function MesCommandes({ onNavigate, onBack }) {
                       </span>
                     </div>
                   </div>
-                  <button className="w-full bg-[#235A3D] text-white py-3 rounded-lg hover:bg-[#1d4a32] transition-colors font-medium">
+                  <button
+                    onClick={onPlaceOrder}
+                    className="w-full bg-[#235A3D] text-white py-3 rounded-lg hover:bg-[#1d4a32] transition-colors font-medium"
+                  >
                     Passer la commande
                   </button>
                 </div>
@@ -245,7 +184,7 @@ export default function MesCommandes({ onNavigate, onBack }) {
           </div>
         ) : (
           <div className="space-y-4">
-            {orders.map((order) => (
+            {(orders || []).map((order) => (
               <div key={order.id} className="bg-white rounded-lg p-4 shadow-sm">
                 <div className="flex justify-between items-start mb-4">
                   <div>

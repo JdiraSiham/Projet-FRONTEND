@@ -1,22 +1,7 @@
-export default function BoutiqueEquipements({ onNavigate }) {
-  const addToCart = (product) => {
-    const notification = document.createElement('div');
-    notification.className = 'fixed top-20 md:top-24 right-4 bg-[#235A3D] text-white px-4 py-3 rounded-lg shadow-xl z-50';
-    notification.textContent = '✓ Ajouté au panier';
-    document.body.appendChild(notification);
-    setTimeout(() => notification.remove(), 2000);
-  };
+import { useState } from 'react';
 
-  const buyNow = (product) => {
-    const notification = document.createElement('div');
-    notification.className = 'fixed top-20 md:top-24 right-4 bg-[#235A3D] text-white px-4 py-3 rounded-lg shadow-xl z-50';
-    notification.textContent = '✓ Redirection vers le paiement...';
-    document.body.appendChild(notification);
-    setTimeout(() => {
-      notification.remove();
-      onNavigate('mes-commandes');
-    }, 1500);
-  };
+export default function BoutiqueEquipements({ onNavigate, onAddToCart, onBuyNow }) {
+  const [searchQuery, setSearchQuery] = useState("");
 
   const equipmentProducts = [
     {
@@ -93,6 +78,13 @@ export default function BoutiqueEquipements({ onNavigate }) {
     },
   ];
 
+  const filteredProducts = equipmentProducts.filter((product) =>
+    product.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const handleAddToCart = (product) => onAddToCart?.(product);
+  const handleBuyNow = (product) => onBuyNow?.(product);
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="bg-white px-4 py-4 sticky top-0 md:top-16 z-40 shadow-sm">
@@ -117,6 +109,8 @@ export default function BoutiqueEquipements({ onNavigate }) {
             <input
               type="text"
               placeholder="Search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:border-[#235A3D]"
             />
           </div>
@@ -125,7 +119,7 @@ export default function BoutiqueEquipements({ onNavigate }) {
 
       <section className="px-4 py-6 max-w-7xl mx-auto pb-24">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
-          {equipmentProducts.map((product) => (
+          {filteredProducts.map((product) => (
             <div key={product.id} className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md hover:-translate-y-1 transition-all">
               <img
                 src={product.image}
@@ -141,13 +135,13 @@ export default function BoutiqueEquipements({ onNavigate }) {
                 </p>
                 <div className="flex flex-col gap-2">
                   <button
-                    onClick={() => addToCart(product)}
+                    onClick={() => handleAddToCart(product)}
                     className="w-full py-2 bg-white border-2 border-[#235A3D] text-[#235A3D] rounded-lg hover:bg-[#235A3D] hover:text-white transition-all text-xs md:text-sm font-medium"
                   >
                     Ajouter au panier
                   </button>
                   <button
-                    onClick={() => buyNow(product)}
+                    onClick={() => handleBuyNow(product)}
                     className="w-full py-2 bg-[#235A3D] text-white rounded-lg hover:bg-[#1d4a32] transition-all text-xs md:text-sm font-medium"
                   >
                     Acheter maintenant

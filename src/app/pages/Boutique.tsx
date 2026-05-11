@@ -1,27 +1,8 @@
 import { useState } from 'react';
 
-export default function Boutique({ onNavigate }) {
-  const [cart, setCart] = useState([]);
+export default function Boutique({ onNavigate, onAddToCart, onBuyNow }) {
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const addToCart = (product) => {
-    setCart([...cart, product]);
-    const notification = document.createElement('div');
-    notification.className = 'fixed top-20 md:top-24 right-4 bg-[#235A3D] text-white px-4 py-3 rounded-lg shadow-xl z-50';
-    notification.textContent = '✓ Ajouté au panier';
-    document.body.appendChild(notification);
-    setTimeout(() => notification.remove(), 2000);
-  };
-
-  const buyNow = (product) => {
-    const notification = document.createElement('div');
-    notification.className = 'fixed top-20 md:top-24 right-4 bg-[#235A3D] text-white px-4 py-3 rounded-lg shadow-xl z-50';
-    notification.textContent = '✓ Redirection vers le paiement...';
-    document.body.appendChild(notification);
-    setTimeout(() => {
-      notification.remove();
-      onNavigate('mes-commandes');
-    }, 1500);
-  };
   const clubsProducts = [
     {
       id: 1,
@@ -85,6 +66,23 @@ export default function Boutique({ onNavigate }) {
     },
   ];
 
+  const filterProducts = (products) =>
+    products.filter((product) =>
+      product.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+  const clubsFiltered = filterProducts(clubsProducts);
+  const nationalFiltered = filterProducts(nationalProducts);
+  const equipmentFiltered = filterProducts(equipmentProducts);
+
+  const handleAddToCart = (product, category) => {
+    onAddToCart?.(product, category);
+  };
+
+  const handleBuyNow = (product, category) => {
+    onBuyNow?.(product, category);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="bg-white px-4 py-4 sticky top-0 md:top-16 z-40 shadow-sm">
@@ -97,6 +95,8 @@ export default function Boutique({ onNavigate }) {
             <input
               type="text"
               placeholder="Search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:border-[#235A3D]"
             />
           </div>
@@ -125,8 +125,8 @@ export default function Boutique({ onNavigate }) {
             </button>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
-            {clubsProducts.map((product) => (
-              <div key={product.id} className="bg-gray-50 rounded-lg overflow-hidden hover:shadow-md hover:-translate-y-1 transition-all border border-gray-200">
+            {clubsFiltered.map((product) => (
+              <div key={`${product.id}-${product.name}`} className="bg-gray-50 rounded-lg overflow-hidden hover:shadow-md hover:-translate-y-1 transition-all border border-gray-200">
                 <img
                   src={product.image}
                   alt={product.name}
@@ -141,13 +141,13 @@ export default function Boutique({ onNavigate }) {
                   </p>
                   <div className="flex flex-col gap-2">
                     <button
-                      onClick={() => addToCart(product)}
+                      onClick={() => handleAddToCart(product, 'Clubs')}
                       className="w-full py-2 bg-white border-2 border-[#235A3D] text-[#235A3D] rounded-lg hover:bg-[#235A3D] hover:text-white transition-all text-xs md:text-sm font-medium"
                     >
                       Ajouter au panier
                     </button>
                     <button
-                      onClick={() => buyNow(product)}
+                      onClick={() => handleBuyNow(product, 'Clubs')}
                       className="w-full py-2 bg-[#235A3D] text-white rounded-lg hover:bg-[#1d4a32] transition-all text-xs md:text-sm font-medium"
                     >
                       Acheter maintenant
@@ -172,8 +172,8 @@ export default function Boutique({ onNavigate }) {
             </button>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
-            {nationalProducts.map((product) => (
-              <div key={product.id} className="bg-gray-50 rounded-lg overflow-hidden hover:shadow-md hover:-translate-y-1 transition-all border border-gray-200">
+            {nationalFiltered.map((product) => (
+              <div key={`${product.id}-${product.name}`} className="bg-gray-50 rounded-lg overflow-hidden hover:shadow-md hover:-translate-y-1 transition-all border border-gray-200">
                 <img
                   src={product.image}
                   alt={product.name}
@@ -188,13 +188,13 @@ export default function Boutique({ onNavigate }) {
                   </p>
                   <div className="flex flex-col gap-2">
                     <button
-                      onClick={() => addToCart(product)}
+                      onClick={() => handleAddToCart(product, 'Nationales')}
                       className="w-full py-2 bg-white border-2 border-[#235A3D] text-[#235A3D] rounded-lg hover:bg-[#235A3D] hover:text-white transition-all text-xs md:text-sm font-medium"
                     >
                       Ajouter au panier
                     </button>
                     <button
-                      onClick={() => buyNow(product)}
+                      onClick={() => handleBuyNow(product, 'Nationales')}
                       className="w-full py-2 bg-[#235A3D] text-white rounded-lg hover:bg-[#1d4a32] transition-all text-xs md:text-sm font-medium"
                     >
                       Acheter maintenant
@@ -219,8 +219,8 @@ export default function Boutique({ onNavigate }) {
             </button>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
-            {equipmentProducts.map((product) => (
-              <div key={product.id} className="bg-gray-50 rounded-lg overflow-hidden hover:shadow-md hover:-translate-y-1 transition-all border border-gray-200">
+            {equipmentFiltered.map((product) => (
+              <div key={`${product.id}-${product.name}`} className="bg-gray-50 rounded-lg overflow-hidden hover:shadow-md hover:-translate-y-1 transition-all border border-gray-200">
                 <img
                   src={product.image}
                   alt={product.name}
@@ -235,13 +235,13 @@ export default function Boutique({ onNavigate }) {
                   </p>
                   <div className="flex flex-col gap-2">
                     <button
-                      onClick={() => addToCart(product)}
+                      onClick={() => handleAddToCart(product, 'Équipements')}
                       className="w-full py-2 bg-white border-2 border-[#235A3D] text-[#235A3D] rounded-lg hover:bg-[#235A3D] hover:text-white transition-all text-xs md:text-sm font-medium"
                     >
                       Ajouter au panier
                     </button>
                     <button
-                      onClick={() => buyNow(product)}
+                      onClick={() => handleBuyNow(product, 'Équipements')}
                       className="w-full py-2 bg-[#235A3D] text-white rounded-lg hover:bg-[#1d4a32] transition-all text-xs md:text-sm font-medium"
                     >
                       Acheter maintenant
