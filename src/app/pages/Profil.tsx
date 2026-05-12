@@ -6,7 +6,7 @@ export default function Profil({ onNavigate }) {
     name: "Ahmed Bennani",
     age: "19",
     email: "ahmed@gmail.com",
-    phone: "+2112 6 123 56 78",
+    phone: "+212 6 12 34 56 78",
     ville: "Casablanca",
     taille: "178",
     poids: "68",

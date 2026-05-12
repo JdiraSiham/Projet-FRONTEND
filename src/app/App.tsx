@@ -419,7 +419,7 @@ function App() {
         </div>
       </nav>
 
-      <div className="md:pt-16 pb-20 md:pb-0">
+      <div className="md:pt-16 pb-0">
         {renderPage()}
       </div>
 
