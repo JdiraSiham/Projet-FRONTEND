@@ -11,10 +11,22 @@ import MesMatchs from './pages/MesMatchs';
 import MesReservations from './pages/MesReservations';
 import CreerMatch from './pages/CreerMatch';
 import PaymentModal from './components/PaymentModal';
+import AuthPage from './components/AuthPage';
 
 function App() {
-  const [currentPage, setCurrentPage] = useState('home');
+  const [currentPage, setCurrentPage] = useState('auth');
   const [previousPage, setPreviousPage] = useState('home');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
+  const [authError, setAuthError] = useState('');
+  const [loginData, setLoginData] = useState({ email: '', password: '' });
+  const [registerData, setRegisterData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    password: '',
+    confirmPassword: '',
+  });
   const [cartItems, setCartItems] = useState([
     {
       id: 2,
@@ -297,6 +309,37 @@ function App() {
     setCartItems((items) => items.filter((item) => !(item.id === id && item.category === category)));
   };
 
+  const handleAuthSubmit = () => {
+    if (authMode === 'login') {
+      if (!loginData.email.trim() || !loginData.password.trim()) {
+        setAuthError('Veuillez renseigner votre email et mot de passe.');
+        return;
+      }
+    } else {
+      if (!registerData.name.trim() || !registerData.email.trim() || !registerData.password.trim() || !registerData.confirmPassword.trim()) {
+        setAuthError('Veuillez compléter tous les champs d’inscription.');
+        return;
+      }
+      if (registerData.password !== registerData.confirmPassword) {
+        setAuthError('Les mots de passe ne correspondent pas.');
+        return;
+      }
+    }
+
+    setAuthError('');
+    setIsAuthenticated(true);
+    setCurrentPage('home');
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    setCurrentPage('auth');
+    setAuthMode('login');
+    setLoginData({ email: '', password: '' });
+    setRegisterData({ name: '', email: '', phone: '', password: '', confirmPassword: '' });
+    setPreviousPage('home');
+  };
+
   const renderPage = () => {
     switch (currentPage) {
       case 'home':
@@ -348,11 +391,27 @@ function App() {
       case 'creer-match':
         return <CreerMatch onNavigate={navigateTo} />;
       case 'profil':
-        return <Profil onNavigate={navigateTo} />;
+        return <Profil onNavigate={navigateTo} onLogout={handleLogout} />;
       default:
         return <Home onNavigate={navigateTo} />;
     }
   };
+
+  const renderAuth = () => (
+    <AuthPage
+      authMode={authMode}
+      onModeChange={(mode) => {
+        setAuthMode(mode);
+        setAuthError('');
+      }}
+      loginData={loginData}
+      onLoginChange={(field, value) => setLoginData((prev) => ({ ...prev, [field]: value }))}
+      registerData={registerData}
+      onRegisterChange={(field, value) => setRegisterData((prev) => ({ ...prev, [field]: value }))}
+      onSubmit={handleAuthSubmit}
+      errorMessage={authError}
+    />
+  );
 
   const navItems = [
     { id: 'home', label: 'Accueil' },
@@ -360,6 +419,10 @@ function App() {
     { id: 'boutique', label: 'Boutique' },
     { id: 'profil', label: 'Profil' },
   ];
+
+  if (!isAuthenticated) {
+    return renderAuth();
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">

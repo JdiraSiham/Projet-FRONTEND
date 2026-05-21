@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function Profil({ onNavigate }) {
+export default function Profil({ onNavigate, onLogout }) {
   const [isEditing, setIsEditing] = useState(false);
   const [userInfo, setUserInfo] = useState({
     name: "Ahmed Bennani",
@@ -372,6 +372,13 @@ export default function Profil({ onNavigate }) {
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <polyline points="9 18 15 12 9 6"></polyline>
             </svg>
+          </button>
+
+          <button
+            onClick={() => onLogout?.()}
+            className="w-full mt-4 bg-red-600 text-white rounded-lg p-4 shadow-sm hover:bg-red-700"
+          >
+            Se déconnecter
           </button>
         </div>
       </div>
